@@ -1,0 +1,20 @@
+#PBS -N combined
+#PBS -l nodes=2:ppn=2
+#PBS -l nodes=atl1-1-03-004-5-r.pace.gatech.edu+atl1-1-01-005-1-l.pace.gatech.edu+atl1-1-01-005-1-r.pace.gatech.edu+atl1-1-01-005-2-r.pace.gatech.edu+atl1-1-03-007-22-r.pace.gatech.edu+atl1-1-02-010-5-l.pace.gatech.edu+atl1-1-02-010-5-r.pace.gatech.edu+atl1-1-02-010-3-r.pace.gatech.edu+atl1-1-03-007-28-r.pace.gatech.edu+atl1-1-03-007-28-l.pace.gatech.edu+atl1-1-03-007-27-l.pace.gatech.edu+atl1-1-03-007-26-r.pace.gatech.edu
+#PBS -l pmem=1gb
+#PBS -l walltime=00:50:00
+#PBS -q coc-ice
+#PBS -j oe
+#PBS -o combined1.out
+
+echo "Started on `/bin/hostname`"
+echo "Nodes chosen are:"
+cat $PBS_NODEFILE
+export OMP_NUM_THREADS=12
+export MV2_ENABLE_AFFINITY=0
+cd ~/combined
+
+module load gcc mvapich2/2.3
+make clean
+make all
+mpirun -np 2 ./combined 2 2 1000
